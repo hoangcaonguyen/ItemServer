@@ -23,14 +23,14 @@ public class FolderService {
         this.itemService = itemService;
     }
 
-    public ResponseDTO addFolder(String folderName){
+    public ResponseDTO addFolder(String folderName, String id){
         Folder folder = new Folder();
         Assert.notNull(folderName, MessageUtils.getMessage("error.input.null", folderName));
         Folder folder1 = folderRepository.findByFolderName(folderName);
         Assert.isNull(folder1, MessageUtils.getMessage("error.not.found", folder1));
         folder.setFolderName(folderName);
         folder.setId(countId());
-        folder.setOwnerId(1);
+        folder.setOwnerId(Integer.valueOf(id));
         folder.setStatus(1);
         folder.setUpDateTime(System.currentTimeMillis());
         folderRepository.save(folder);

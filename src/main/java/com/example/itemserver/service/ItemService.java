@@ -30,7 +30,7 @@ public class ItemService {
     }
 
     @Transactional
-    public ResponseDTO addItem(MultipartFile file){
+    public ResponseDTO addItem(MultipartFile file, String id, String folderId){
         ResponseDTO responseDTO = new ResponseDTO();
         Assert.isTrue(DataUtils.notNullOrEmpty(file), MessageUtils.getMessage("error.input.null", file));
         Item item = new Item();
@@ -43,7 +43,8 @@ public class ItemService {
                 item.setItemName(fileName);
                 item.setType(file.getContentType());
                 item.setItemData(Base64.getEncoder().encodeToString(file.getBytes()));
-                item.setOwnerId(1);
+                item.setOwnerId(Integer.valueOf(id));
+                item.setFolderId(Integer.valueOf(folderId));
                 item.setStatus(1);
                 item.setUpDateTime(System.currentTimeMillis());
             } catch (IOException e) {
@@ -56,10 +57,10 @@ public class ItemService {
     }
 
     @Transactional
-    public ResponseDTO addItems(List<MultipartFile>  listFile){
+    public ResponseDTO addItems(List<MultipartFile>  listFile, String id, String folderId){
         ResponseDTO responseDTO = new ResponseDTO();
         for (MultipartFile file: listFile){
-            responseDTO = addItem(file);
+            responseDTO = addItem(file, id,folderId);
         }
         return responseDTO;
     }
