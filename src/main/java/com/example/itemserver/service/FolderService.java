@@ -1,6 +1,7 @@
 package com.example.itemserver.service;
 
 import com.example.itemserver.common.MessageUtils;
+import com.example.itemserver.common.ULID;
 import com.example.itemserver.dto.ResponseDTO;
 import com.example.itemserver.entity.Folder;
 import com.example.itemserver.entity.Item;
@@ -29,8 +30,8 @@ public class FolderService {
         Folder folder1 = folderRepository.findByFolderName(folderName);
         Assert.isNull(folder1, MessageUtils.getMessage("error.not.found", folder1));
         folder.setFolderName(folderName);
-        folder.setId(countId());
-        folder.setOwnerId(Integer.valueOf(id));
+        folder.setId(new ULID().nextULID());
+        folder.setOwnerId(id);
         folder.setStatus(1);
         folder.setUpDateTime(System.currentTimeMillis());
         folderRepository.save(folder);
@@ -67,7 +68,7 @@ public class FolderService {
         return responseDTO;
     }
 
-    public ResponseDTO deleteFolder(int folderId){
+    public ResponseDTO deleteFolder(String folderId){
         Assert.notNull(folderId, MessageUtils.getMessage("error.notfound", folderId));
         Folder folder = folderRepository.findById(folderId);
         List<Item> items = itemRepository.findAllByFolderId(folder.getId());
@@ -87,7 +88,7 @@ public class FolderService {
         return responseDTO;
     }
 
-    public ResponseDTO getAllFolderByOwner(int id){
+    public ResponseDTO getAllFolderByOwner(String id){
         ResponseDTO responseDTO = successResponse();
         responseDTO.setResponse(folderRepository.findAllByOwnerId(id));
         return responseDTO;

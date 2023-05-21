@@ -1,10 +1,7 @@
 package com.example.itemserver.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -12,11 +9,11 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "item")
 @Data
-@NoArgsConstructor
+@NoArgsConstructor(force = true)
 @AllArgsConstructor
 public class Item {
     @Id
-    private int id;
+    private String id;
     @Field(name = "itemName")
     @NonNull
     private String itemName;
@@ -25,11 +22,11 @@ public class Item {
     @Field(name = "itemData")
     private String itemData;
     @Field(name = "folderId")
-    private int folderId;
+    private String folderId;
     @Field(name = "ownerId")
     @Indexed(unique = true)
     @NonNull
-    private int ownerId;
+    private String ownerId;
     @Field(name = "status")
     private int status;
     @Field(name = "upDateTime")

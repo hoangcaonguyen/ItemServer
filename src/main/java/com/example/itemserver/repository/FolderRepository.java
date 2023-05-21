@@ -9,7 +9,7 @@ import java.util.List;
 public interface FolderRepository extends MongoRepository<Folder, Integer> {
     @Query("{'folderName': ?0}")
     Folder findByFolderName(String folderName);
-    Folder findById(int id);
+    Folder findById(String id);
     List<Folder> findAllByStatus (int status);
-    List<Folder> findAllByOwnerId (int id);
+    List<Folder> findAllByOwnerId (String id);
 }

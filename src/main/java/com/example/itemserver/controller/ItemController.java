@@ -1,11 +1,13 @@
 package com.example.itemserver.controller;
 
 import com.example.itemserver.dto.ResponseDTO;
+import com.example.itemserver.service.AuthorizationService;
 import com.example.itemserver.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +22,7 @@ import java.util.List;
 public class ItemController {
 
     private final ItemService itemService;
+    private final AuthorizationService authorizationService;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -29,51 +32,72 @@ public class ItemController {
     @PostMapping(value = "/addItem")
     public ResponseDTO addItem(@RequestPart("file") MultipartFile file,
                                @RequestPart("id") String id,
-                               @RequestPart("folder") String folderId){
+                               @RequestPart("folder") String folderId,
+                               @RequestHeader(name = "Authorization") String token){
+        if(!authorizationService.authorization(token)) return ResponseDTO.authFailed();
+
         ResponseDTO response = new ResponseDTO();
         response = itemService.addItem(file, id, folderId);
+
         return response;
     }
 
     @PostMapping(value = "/addItems")
     public ResponseDTO addItems(@RequestPart("file") List<MultipartFile> listFile,
                                 @RequestPart("id") String id,
-                                @RequestPart("folder") String folderId){
+                                @RequestPart("folder") String folderId,
+                                @RequestHeader(name = "Authorization") String token){
+        if(!authorizationService.authorization(token)) return ResponseDTO.authFailed();
+
         ResponseDTO response = new ResponseDTO();
         response = itemService.addItems(listFile, id, folderId);
         return response;
     }
 
     @PostMapping(value = "/findItem")
-    public ResponseDTO findItem(@RequestPart("itemName") String itemName){
+    public ResponseDTO findItem(@RequestPart("itemName") String itemName,
+                                @RequestHeader(name = "Authorization") String token){
+        if(!authorizationService.authorization(token)) return ResponseDTO.authFailed();
+
         ResponseDTO response = new ResponseDTO();
         response = itemService.findItem(itemName);
         return response;
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseDTO deleteItem(@PathVariable(name = "id") int id) {
+    public ResponseDTO deleteItem(@PathVariable(name = "id") String id,
+                                  @RequestHeader(name = "Authorization") String token) {
+        if(!authorizationService.authorization(token)) return ResponseDTO.authFailed();
+
         ResponseDTO response = new ResponseDTO();
         response = itemService.deleteItem(id);
         return response;
     }
 
     @PostMapping(value = "/moveItem")
-    public ResponseDTO moveItem(@RequestPart("item") int itemId,
-                                @RequestPart("folder") int folderId){
+    public ResponseDTO moveItem(@RequestPart("item") String itemId,
+                                @RequestPart("folder") String folderId,
+                                @RequestHeader(name = "Authorization") String token){
+        if(!authorizationService.authorization(token)) return ResponseDTO.authFailed();
+
         ResponseDTO response = new ResponseDTO();
         response = itemService.moveItem(itemId,folderId);
         return response;
     }
     @GetMapping("/list")
-    public ResponseDTO getAllItem(){
+    public ResponseDTO getAllItem(@RequestHeader(name = "Authorization") String token){
+        if(!authorizationService.authorization(token)) return ResponseDTO.authFailed();
+
         ResponseDTO response = new ResponseDTO();
         response = itemService.getAllItem();
         return response;
     }
 
     @GetMapping(value = "/findByOwner/{id}")
-    public ResponseDTO findItem(@PathVariable(name = "id") int ownerId){
+    public ResponseDTO findItemByOwner(@PathVariable(name = "id") String ownerId,
+                                       @RequestHeader(name = "Authorization") String token){
+        if(!authorizationService.authorization(token)) return ResponseDTO.authFailed();
+
         ResponseDTO response = new ResponseDTO();
         response = itemService.findAllByOwnerId(ownerId);
         return response;

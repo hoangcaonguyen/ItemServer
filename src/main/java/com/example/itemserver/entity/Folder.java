@@ -13,11 +13,11 @@ import java.util.List;
 
 @Document(collection = "folder")
 @Data
-@NoArgsConstructor
+@NoArgsConstructor(force = true)
 @AllArgsConstructor
 public class Folder {
     @Id
-    private int id;
+    private String id;
     @Field(name = "folderName")
     @NonNull
     private String folderName;
@@ -28,7 +28,7 @@ public class Folder {
     @Field(name = "ownerId")
     @Indexed(unique = true)
     @NonNull
-    private int ownerId;
+    private String ownerId;
     @Field(name = "status")
     private int status;
     @Field(name = "upDateTime")

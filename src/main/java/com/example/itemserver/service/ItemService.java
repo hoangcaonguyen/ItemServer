@@ -2,6 +2,7 @@ package com.example.itemserver.service;
 
 import com.example.itemserver.common.DataUtils;
 import com.example.itemserver.common.MessageUtils;
+import com.example.itemserver.common.ULID;
 import com.example.itemserver.dto.ResponseDTO;
 import com.example.itemserver.entity.Folder;
 import com.example.itemserver.entity.Item;
@@ -34,7 +35,7 @@ public class ItemService {
         ResponseDTO responseDTO = new ResponseDTO();
         Assert.isTrue(DataUtils.notNullOrEmpty(file), MessageUtils.getMessage("error.input.null", file));
         Item item = new Item();
-        item.setId(countId());
+        item.setId(new ULID().nextULID());
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         if(fileName.contains(". .")){
             responseDTO.setMessage("not a valid file");
@@ -43,8 +44,8 @@ public class ItemService {
                 item.setItemName(fileName);
                 item.setType(file.getContentType());
                 item.setItemData(Base64.getEncoder().encodeToString(file.getBytes()));
-                item.setOwnerId(Integer.valueOf(id));
-                item.setFolderId(Integer.valueOf(folderId));
+                item.setOwnerId(id);
+                item.setFolderId(folderId);
                 item.setStatus(1);
                 item.setUpDateTime(System.currentTimeMillis());
             } catch (IOException e) {
@@ -73,7 +74,7 @@ public class ItemService {
         return responseDTO;
     }
 
-    public ResponseDTO deleteItem(int id){
+    public ResponseDTO deleteItem(String id){
         Assert.notNull(id, MessageUtils.getMessage("error.notfound", id));
         Item item = itemRepository.findById(id);
         item.setStatus(0);
@@ -83,7 +84,7 @@ public class ItemService {
         return responseDTO;
     }
 
-    public ResponseDTO moveItem(int id, int folderId){
+    public ResponseDTO moveItem(String id, String folderId){
         ResponseDTO responseDTO = successResponse();
         Assert.notNull(id, MessageUtils.getMessage("error.notfound", id));
         Item item = itemRepository.findById(id);
@@ -108,19 +109,10 @@ public class ItemService {
         return responseDTO;
     }
 
-    public ResponseDTO findAllByOwnerId(int id){
+    public ResponseDTO findAllByOwnerId(String id){
         ResponseDTO responseDTO = successResponse();
         responseDTO.setResponse(itemRepository.findAllByOwnerId(id));
         return responseDTO;
-    }
-
-
-
-
-
-    public int countId (){
-        int count = (int)itemRepository.findAll().stream().count();
-        return count+1;
     }
 
     public ResponseDTO successResponse(){
