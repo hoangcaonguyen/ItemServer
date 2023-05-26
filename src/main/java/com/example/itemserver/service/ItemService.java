@@ -34,6 +34,8 @@ public class ItemService {
     public ResponseDTO addItem(MultipartFile file, String id, String folderId){
         ResponseDTO responseDTO = new ResponseDTO();
         Assert.isTrue(DataUtils.notNullOrEmpty(file), MessageUtils.getMessage("error.input.null", file));
+        Folder folder = folderRepository.findById(folderId);
+        Assert.notNull(folder, MessageUtils.getMessage("error.not.found", folderRepository.findById(folderId)));
         Item item = new Item();
         item.setId(new ULID().nextULID());
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
@@ -52,6 +54,8 @@ public class ItemService {
                 e.printStackTrace();
             }
             itemRepository.save(item);
+            folder.setQuantity(folder.getQuantity()+1);
+            folderRepository.save(folder);
             responseDTO = successResponse();
         }
         return responseDTO;
