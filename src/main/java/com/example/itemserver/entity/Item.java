@@ -21,6 +21,8 @@ public class Item {
     private String type;
     @Field(name = "itemData")
     private String itemData;
+    private byte[] itemBytes;
+    private String link;
     @Field(name = "folderId")
     private String folderId;
     @Field(name = "ownerId")

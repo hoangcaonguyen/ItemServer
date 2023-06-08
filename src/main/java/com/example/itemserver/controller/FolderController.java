@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 @RestController
@@ -62,7 +63,7 @@ public class FolderController {
 
     @PostMapping("/getAllFolderItem")
     public ResponseDTO getAllFolderItem(@RequestPart("name") String name,
-                                        @RequestHeader(name = "Authorization") String token){
+                                        @RequestHeader(name = "Authorization") String token) throws IOException {
         if(!authorizationService.authorization(token)) return ResponseDTO.authFailed();
 
         ResponseDTO response = new ResponseDTO();

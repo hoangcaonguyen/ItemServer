@@ -7,9 +7,12 @@ import com.example.itemserver.entity.Folder;
 import com.example.itemserver.entity.Item;
 import com.example.itemserver.repository.FolderRepository;
 import com.example.itemserver.repository.ItemRepository;
+import com.google.api.services.drive.Drive;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -17,11 +20,13 @@ public class FolderService {
     private final FolderRepository folderRepository;
     private final ItemRepository itemRepository;
     private final ItemService itemService;
+    private final Drive drive;
 
-    public FolderService(FolderRepository folderRepository, ItemRepository itemRepository, ItemService itemService) {
+    public FolderService(FolderRepository folderRepository, ItemRepository itemRepository, ItemService itemService, Drive drive) {
         this.folderRepository = folderRepository;
         this.itemRepository = itemRepository;
         this.itemService = itemService;
+        this.drive = drive;
     }
 
     public ResponseDTO addFolder(String folderName, String id){
@@ -59,10 +64,17 @@ public class FolderService {
         return responseDTO;
     }
 
-    public ResponseDTO getAllFolderItem(String folderName){
+    public ResponseDTO getAllFolderItem(String folderName) throws IOException {
         Assert.notNull(folderName, MessageUtils.getMessage("error.input.null", folderName));
         Folder folder = folderRepository.findByFolderName(folderName);
         List<Item> items = itemRepository.findAllByFolderId(folder.getId());
+//        for (Item item : items){
+//            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//
+//            drive.files().get(item.getId())
+//                    .executeMediaAndDownloadTo(outputStream);
+//            item.setItemBytes(outputStream.toByteArray());
+//        }
         ResponseDTO responseDTO = successResponse();
         responseDTO.setResponse(items);
         return responseDTO;

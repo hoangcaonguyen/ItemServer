@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -56,7 +57,7 @@ public class ItemController {
 
     @PostMapping(value = "/findItem")
     public ResponseDTO findItem(@RequestPart("itemName") String itemName,
-                                @RequestHeader(name = "Authorization") String token){
+                                @RequestHeader(name = "Authorization") String token) throws IOException {
         if(!authorizationService.authorization(token)) return ResponseDTO.authFailed();
 
         ResponseDTO response = new ResponseDTO();
@@ -85,7 +86,7 @@ public class ItemController {
         return response;
     }
     @GetMapping("/list")
-    public ResponseDTO getAllItem(@RequestHeader(name = "Authorization") String token){
+    public ResponseDTO getAllItem(@RequestHeader(name = "Authorization") String token) throws IOException {
         if(!authorizationService.authorization(token)) return ResponseDTO.authFailed();
 
         ResponseDTO response = new ResponseDTO();
@@ -95,7 +96,7 @@ public class ItemController {
 
     @GetMapping(value = "/findByOwner/{id}")
     public ResponseDTO findItemByOwner(@PathVariable(name = "id") String ownerId,
-                                       @RequestHeader(name = "Authorization") String token){
+                                       @RequestHeader(name = "Authorization") String token) throws IOException {
         if(!authorizationService.authorization(token)) return ResponseDTO.authFailed();
 
         ResponseDTO response = new ResponseDTO();
@@ -109,5 +110,10 @@ public class ItemController {
         HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
         ResponseEntity<String> response = restTemplate.exchange(url + functionUrl , HttpMethod.GET, entity, String.class);
         return response;
+    }
+
+    @GetMapping(value = "/download-file")
+    public ResponseEntity<byte[]> downloadItem(@RequestPart("id") String itemId) throws IOException {
+        return ResponseEntity.ok(itemService.downloadItem(itemId));
     }
 }
