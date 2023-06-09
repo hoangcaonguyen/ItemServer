@@ -20,7 +20,7 @@ public class AuthorizationService {
         headers.set("Authorization", token);
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
-        String URL = "http://localhost:8081/account/check-exist";
+        String URL = "https://userserver-production.up.railway.app/account/check-exist";
         ResponseEntity<String> response = restTemplate.exchange(URL, HttpMethod.GET, requestEntity, String.class);
         JSONObject jsonObject = new JSONObject(response.getBody());
         int code = Integer.parseInt(jsonObject.get("code").toString());
