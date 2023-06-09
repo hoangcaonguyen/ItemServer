@@ -95,9 +95,8 @@ public class ItemController {
     }
 
     @GetMapping(value = "/findByOwner/{id}")
-    public ResponseDTO findItemByOwner(@PathVariable(name = "id") String ownerId,
-                                       @RequestHeader(name = "Authorization") String token) throws IOException {
-        if(!authorizationService.authorization(token)) return ResponseDTO.authFailed();
+    public ResponseDTO findItemByOwner(@PathVariable(name = "id") String ownerId) throws IOException {
+
 
         ResponseDTO response = new ResponseDTO();
         response = itemService.findAllByOwnerId(ownerId);

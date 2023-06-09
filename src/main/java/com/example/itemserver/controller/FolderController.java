@@ -91,9 +91,8 @@ public class FolderController {
     }
 
     @GetMapping(value = "/findByOwner/{id}")
-    public ResponseDTO findItem(@PathVariable(name = "id") String ownerId,
-                                @RequestHeader(name = "Authorization") String token){
-        if(!authorizationService.authorization(token)) return ResponseDTO.authFailed();
+    public ResponseDTO findItem(@PathVariable(name = "id") String ownerId){
+//        if(!authorizationService.authorization(token)) return ResponseDTO.authFailed();
 
         ResponseDTO response = new ResponseDTO();
         response = folderService.getAllFolderByOwner(ownerId);
