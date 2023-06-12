@@ -13,6 +13,7 @@ import org.springframework.util.Assert;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -102,7 +103,12 @@ public class FolderService {
 
     public ResponseDTO getAllFolderByOwner(String id){
         ResponseDTO responseDTO = successResponse();
-        responseDTO.setResponse(folderRepository.findAllByOwnerId(id));
+        List<Folder> listF = folderRepository.findAllByOwnerId(id);
+        List<Folder> folderList = new ArrayList<>();
+        for (Folder folder : listF){
+            folderList.add(folder);
+        }
+        responseDTO.setResponse(folderList);
         return responseDTO;
     }
 
