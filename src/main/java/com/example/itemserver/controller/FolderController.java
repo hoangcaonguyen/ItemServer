@@ -41,13 +41,13 @@ public class FolderController {
     }
 
     @PostMapping("/updateFolder")
-    public ResponseDTO updateFolder(@RequestPart("name") String name,
+    public ResponseDTO updateFolder(@RequestPart("id") String id,
                                     @RequestPart("newName") String newName,
                                     @RequestHeader(name = "Authorization") String token){
         if(!authorizationService.authorization(token)) return ResponseDTO.authFailed();
 
         ResponseDTO response = new ResponseDTO();
-        response = folderService.updateFolder(name,newName);
+        response = folderService.updateFolder(id,newName);
         return response;
     }
 

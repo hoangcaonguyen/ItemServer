@@ -44,10 +44,10 @@ public class FolderService {
         return responseDTO;
     }
 
-    public ResponseDTO updateFolder(String name, String newName){
-        Assert.notNull(name, MessageUtils.getMessage("error.input.null", name));
+    public ResponseDTO updateFolder(String id, String newName){
+        Assert.notNull(id, MessageUtils.getMessage("error.input.null", id));
         Assert.notNull(newName, MessageUtils.getMessage("error.input.null", newName));
-        Folder folder = folderRepository.findByFolderName(name);
+        Folder folder = folderRepository.findById(id);
         Assert.notNull(folder, MessageUtils.getMessage("error.not.found", folder));
         folder.setFolderName(newName);
         folder.setUpDateTime(System.currentTimeMillis());
