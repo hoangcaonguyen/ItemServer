@@ -24,6 +24,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
@@ -150,15 +151,14 @@ public class ItemService {
 
     public ResponseDTO findAllByOwnerId(String id) throws IOException {
         List<Item> items = itemRepository.findAllByOwnerId(id);
-//        for (Item item : items) {
-//            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-//
-//            drive.files().get(item.getId())
-//                    .executeMediaAndDownloadTo(outputStream);
-//            item.setItemBytes(outputStream.toByteArray());
-//        }
+        List<Item> itemList = new ArrayList<>();
+        for (Item item : items){
+            if (item.getStatus()==1) {
+                itemList.add(item);
+            }
+        }
         ResponseDTO responseDTO = successResponse();
-        responseDTO.setResponse(items);
+        responseDTO.setResponse(itemList);
         return responseDTO;
     }
 
