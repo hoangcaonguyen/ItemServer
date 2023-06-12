@@ -111,7 +111,7 @@ public class ItemController {
         return response;
     }
 
-    @GetMapping(value = "/download-file")
+    @PostMapping(value = "/download-file")
     public ResponseEntity<byte[]> downloadItem(@RequestPart("id") String itemId) throws IOException {
         return ResponseEntity.ok(itemService.downloadItem(itemId));
     }
