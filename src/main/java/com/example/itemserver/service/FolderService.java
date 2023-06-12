@@ -106,7 +106,9 @@ public class FolderService {
         List<Folder> listF = folderRepository.findAllByOwnerId(id);
         List<Folder> folderList = new ArrayList<>();
         for (Folder folder : listF){
-            folderList.add(folder);
+            if (folder.getStatus()==1) {
+                folderList.add(folder);
+            }
         }
         responseDTO.setResponse(folderList);
         return responseDTO;
